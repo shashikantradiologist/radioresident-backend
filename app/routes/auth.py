@@ -2,16 +2,17 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from werkzeug.security import generate_password_hash
 from flask_login import login_user
 from app.models.user import db, User
-
-# Flask-Dance (Google OAuth)
 from flask_dance.contrib.google import google
 
-# ✅ Define blueprint ONCE, at the top, before decorators
 auth_bp = Blueprint("auth", __name__)
 
-@auth_bp.route("/login/google")
-def login_google():
+# ✅ DO NOT create /login/google route (Flask-Dance already uses it)
+# Instead, handle post-login here:
+
+@auth_bp.route("/auth/google/callback")
+def google_callback():
     if not google.authorized:
+        flash("Google authorization required.", "error")
         return redirect(url_for("google.login"))
 
     resp = google.get("/oauth2/v2/userinfo")
@@ -27,7 +28,6 @@ def login_google():
         flash("Google account missing email.", "error")
         return redirect(url_for("auth.login"))
 
-    # Find or create user
     user = User.query.filter_by(email=email).first()
     if not user:
         user = User(full_name=full_name, email=email, password_hash="google-oauth")

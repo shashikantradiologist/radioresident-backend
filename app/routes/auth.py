@@ -1,13 +1,10 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
-from werkzeug.security import generate_password_hash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user
 from app.models.user import db, User
 from flask_dance.contrib.google import google
 
 auth_bp = Blueprint("auth", __name__)
-
-# ✅ DO NOT create /login/google route (Flask-Dance already uses it)
-# Instead, handle post-login here:
 
 @auth_bp.route("/auth/google/callback")
 def google_callback():
@@ -17,80 +14,52 @@ def google_callback():
 
     resp = google.get("/oauth2/v2/userinfo")
     if not resp.ok:
+        current_app.logger.warning("Google userinfo failed: %s %s", resp.status_code, resp.text)
         flash("Failed to fetch user info from Google.", "error")
         return redirect(url_for("auth.login"))
 
     info = resp.json()
-    email = info.get("email")
-    full_name = info.get("name") or email
+    email = (info.get("email") or "").strip().lower()
+    full_name = (info.get("name") or "").strip() or email
+    google_id = info.get("id") or info.get("sub")  # depending on endpoint
 
     if not email:
         flash("Google account missing email.", "error")
         return redirect(url_for("auth.login"))
 
-    user = User.query.filter_by(email=email).first()
-    if not user:
-        user = User(full_name=full_name, email=email, password_hash="google-oauth")
-        db.session.add(user)
-        try:
-            db.session.commit()
-        except Exception:
-            db.session.rollback()
-            flash("Could not create user from Google account.", "error")
-            return redirect(url_for("auth.login"))
+    try:
+        # Prefer google_id match if your model supports it
+        user = None
+        if google_id and hasattr(User, "google_sub"):
+            user = User.query.filter_by(google_sub=google_id).first()
+
+        if not user:
+            user = User.query.filter_by(email=email).first()
+
+        if not user:
+            # For google users, password_hash should be NULL ideally
+            user = User(full_name=full_name, email=email)
+            if hasattr(user, "google_sub") and google_id:
+                user.google_sub = google_id
+            if hasattr(user, "auth_provider"):
+                user.auth_provider = "google"
+            db.session.add(user)
+        else:
+            # keep profile updated
+            user.full_name = full_name
+            if hasattr(user, "google_sub") and google_id and not user.google_sub:
+                user.google_sub = google_id
+            if hasattr(user, "auth_provider") and not getattr(user, "auth_provider", None):
+                user.auth_provider = "google"
+
+        db.session.commit()
+
+    except Exception:
+        db.session.rollback()
+        current_app.logger.exception("Could not create/update user from Google account.")
+        flash("Could not login with Google. Please try again.", "error")
+        return redirect(url_for("auth.login"))
 
     login_user(user)
     flash("Logged in with Google!", "success")
     return redirect(url_for("public.home"))
-
-
-@auth_bp.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        email = (request.form.get("email") or "").strip()
-        password = request.form.get("password") or ""
-
-        if not email or not password:
-            flash("Please enter email and password.", "error")
-            return redirect(url_for("auth.login"))
-
-        flash("Login POST received (backend not implemented yet).", "success")
-        return redirect(url_for("auth.login"))
-
-    return render_template("auth/login.html")
-
-
-@auth_bp.route("/register", methods=["GET", "POST"])
-def register():
-    if request.method == "POST":
-        full_name = (request.form.get("full_name") or "").strip()
-        email = (request.form.get("email") or "").strip().lower()
-        password = request.form.get("password") or ""
-        confirm = request.form.get("confirm_password") or ""
-
-        if not full_name or not email or not password:
-            flash("Please fill all required fields.", "error")
-            return redirect(url_for("auth.register"))
-
-        if password != confirm:
-            flash("Passwords do not match.", "error")
-            return redirect(url_for("auth.register"))
-
-        existing = User.query.filter_by(email=email).first()
-        if existing:
-            flash("Email already registered.", "error")
-            return redirect(url_for("auth.register"))
-
-        pw_hash = generate_password_hash(password)
-        user = User(full_name=full_name, email=email, password_hash=pw_hash)
-        db.session.add(user)
-        try:
-            db.session.commit()
-            flash("Registration successful! Please log in.", "success")
-            return redirect(url_for("auth.login"))
-        except Exception:
-            db.session.rollback()
-            flash("Registration failed. Please try again.", "error")
-            return redirect(url_for("auth.register"))
-
-    return render_template("auth/register.html")

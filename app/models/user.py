@@ -1,15 +1,22 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
+from datetime import datetime
 
-# db will be initialized in app/__init__.py
 db = SQLAlchemy()
 
-class User(UserMixin, db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	full_name = db.Column(db.String(120), nullable=False)
-	email = db.Column(db.String(120), unique=True, nullable=False)
-	password_hash = db.Column(db.String(128), nullable=False)
-	# Add more fields as needed
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
 
-	def __repr__(self):
-		return f"<User {self.email}>"
+    # Local identity
+    email = db.Column(db.String(255), unique=True, nullable=False, index=True)
+    full_name = db.Column(db.String(255), nullable=True)
+
+    # Google identity
+    google_sub = db.Column(db.String(255), unique=True, nullable=True, index=True)
+    avatar_url = db.Column(db.String(512), nullable=True)
+
+    # Authorization / roles
+    role = db.Column(db.String(50), default="resident")  # resident/faculty/admin
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

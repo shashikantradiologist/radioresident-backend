@@ -7,6 +7,7 @@ try:
 except Exception:
     pass
 
+
 from config import Config
 
 from flask_login import LoginManager

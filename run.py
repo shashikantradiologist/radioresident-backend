@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 print("Starting RadioResident...")
 
 from app import create_app

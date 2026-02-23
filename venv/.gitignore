@@ -1,18 +1,10 @@
-# local secrets
 .env
 .env.*
-
-# virtual env / python caches
 venv/
 __pycache__/
-.pytest_cache/
 *.pyc
-
-# local db / instance
-*.db
+*.pyo
+.pytest_cache/
 instance/
-
-# repo-cleanup artifacts (DO NOT TRACK)
-radioresident-backend/
-radioresident-backend-mirror/
-bfg-*.jar
+*.db
+.vscode/

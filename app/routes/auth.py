@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from werkzeug.security import check_password_hash
 from flask_login import login_user
 from flask_dance.contrib.google import google
-
+from flask_login import login_user, logout_user, login_required
 from app.models.user import db, User
 
 auth_bp = Blueprint("auth", __name__)

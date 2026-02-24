@@ -1,157 +1,133 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Radioresident – Home</title>
-  <style>
-    :root {
-      --primary: #2a3a6a;
-      --accent: #1a6a5a;
-      --bg: #f7f9fc;
-      --card: #fff;
-      --text: #1a2236;
-      --muted: #6b7a99;
-      --radius: 18px;
-      --shadow: 0 4px 32px rgba(42,58,106,0.10);
-      --maxw: 1100px;
-    }
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .nav {
-      width: 100%;
-      background: var(--primary);
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      gap: 18px;
-      padding: 18px 0 12px 0;
-      font-size: 1.08rem;
-      flex-wrap: wrap;
-    }
-    .nav a {
-      color: #fff;
-      text-decoration: none;
-      padding: 7px 16px;
-      border-radius: 8px;
-      transition: background 0.15s;
-    }
-    .nav a:hover, .nav a.active {
-      background: var(--accent);
-    }
-    .hero {
-      width: 100%;
-      background: linear-gradient(90deg, #2a3a6a 60%, #1a6a5a 100%);
-      color: #fff;
-      padding: 54px 0 38px 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      box-shadow: var(--shadow);
-    }
-    .hero-title {
-      font-size: 2.7rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      letter-spacing: -1px;
-      text-align: center;
-    }
-    .hero-desc {
-      font-size: 1.18rem;
-      color: #e0e6f7;
-      max-width: 520px;
-      text-align: center;
-      margin-bottom: 18px;
-    }
-    .main {
-      width: 100%;
-      max-width: var(--maxw);
-      margin-top: -38px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 32px;
-      padding: 0 18px 48px 18px;
-    }
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 32px 28px 28px 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .card h2 {
-      margin: 0 0 8px 0;
-      font-size: 1.35rem;
-      color: var(--primary);
-    }
-    .card ul {
-      margin: 0;
-      padding-left: 18px;
-      color: var(--muted);
-      font-size: 1.05rem;
-    }
-    .card li {
-      margin-bottom: 7px;
-    }
-    @media (max-width: 900px) {
-      .main {
-        grid-template-columns: 1fr;
-        gap: 22px;
-        margin-top: -18px;
-      }
-      .hero-title { font-size: 2.1rem; }
-    }
-    @media (max-width: 600px) {
-      .main { padding: 0 4vw 32px 4vw; }
-      .hero { padding: 36px 0 22px 0; }
-      .hero-title { font-size: 1.45rem; }
-    }
-  </style>
-</head>
-<body>
-  <nav class="nav">
-    <a href="/" class="active">Home</a>
-    <a href="/articles">Articles</a>
-    <a href="/cases">Cases</a>
-    <a href="/quizzes">Quizzes</a>
-    <a href="/games">Games</a>
-    <a href="/login">Login</a>
-  </nav>
-  <section class="hero">
-    <div class="hero-title">Radioresident</div>
+{% extends "layout.html" %}
+
+{% block title %}Radioresident – Home{% endblock %}
+
+{% block head_extra %}
+<style>
+  :root {
+    --primary: #2a3a6a;
+    --accent: #1a6a5a;
+    --bg: #f7f9fc;
+    --card: #fff;
+    --text: #1a2236;
+    --muted: #6b7a99;
+    --radius: 18px;
+    --shadow: 0 4px 32px rgba(42,58,106,0.10);
+    --maxw: 1100px;
+  }
+  body {
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  .hero {
+    width: 100%;
+    background: linear-gradient(90deg, #2a3a6a 60%, #1a6a5a 100%);
+    color: #fff;
+    padding: 54px 0 38px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: var(--shadow);
+  }
+  .hero-title {
+    font-size: 2.7rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+    text-align: center;
+  }
+  .hero-desc {
+    font-size: 1.18rem;
+    color: #e0e6f7;
+    max-width: 560px;
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  .main {
+    width: 100%;
+    max-width: var(--maxw);
+    margin: -38px auto 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    padding: 0 18px 48px 18px;
+  }
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 32px 28px 28px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .card h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.35rem;
+    color: var(--primary);
+  }
+  .card ul {
+    margin: 0;
+    padding-left: 18px;
+    color: var(--muted);
+    font-size: 1.05rem;
+  }
+  .card li { margin-bottom: 7px; }
+
+  @media (max-width: 900px) {
+    .main { grid-template-columns: 1fr; gap: 22px; margin-top: -18px; }
+    .hero-title { font-size: 2.1rem; }
+  }
+  @media (max-width: 600px) {
+    .main { padding: 0 4vw 32px 4vw; }
+    .hero { padding: 36px 0 22px 0; }
+    .hero-title { font-size: 1.45rem; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-title">Radioresident</div>
+
+  {% if current_user.is_authenticated %}
+    <div class="hero-desc">
+      Welcome back, <b>{{ (current_user.full_name or current_user.email).split(' ')[0] }}</b>.
+      Continue learning with quizzes, cases, and articles.
+    </div>
+  {% else %}
     <div class="hero-desc">
       Clinical workflow, reporting, and learning tools for radiology residents and clinicians.<br>
       Streamline your cases, quizzes, and education in one modern platform.
     </div>
+  {% endif %}
+</section>
+
+<main class="main">
+  <section class="card">
+    <h2>What’s new</h2>
+    <ul>
+      <li>Article: Approach to CXR</li>
+      <li>Case: Acute abdomen USG pearls</li>
+      <li>Quiz: Rapid CT brain</li>
+    </ul>
+    {% if not current_user.is_authenticated %}
+      <div class="mt-2">
+        <a class="btn btn-sm btn-primary" href="{{ url_for('auth.login') }}">Login to personalize</a>
+      </div>
+    {% endif %}
   </section>
-  <main class="main">
-    <section class="card">
-      <h2>What’s new</h2>
-      <ul>
-        <li>Article: Approach to CXR</li>
-        <li>Case: Acute abdomen USG pearls</li>
-        <li>Quiz: Rapid CT brain</li>
-      </ul>
-    </section>
-    <section class="card">
-      <h2>Platform highlights</h2>
-      <ul>
-        <li>Role-based access for residents and faculty</li>
-        <li>Audit-ready activity logs</li>
-        <li>Fast case search and reporting</li>
-        <li>Resident learning tools and quizzes</li>
-      </ul>
-    </section>
-  </main>
-</body>
-</html>
+
+  <section class="card">
+    <h2>Platform highlights</h2>
+    <ul>
+      <li>Role-based access for residents and faculty</li>
+      <li>Audit-ready activity logs</li>
+      <li>Fast case search and reporting</li>
+      <li>Resident learning tools and quizzes</li>
+    </ul>
+  </section>
+</main>
+{% endblock %}

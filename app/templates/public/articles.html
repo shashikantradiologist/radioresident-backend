@@ -1,12 +1,127 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>articles</title>
-</head>
-<body>
-    <h1>ARTICLES</h1>
-    
-</body>
-</html>
+{% extends "layout.html" %}
+
+{% block title %}Articles | Radioresident{% endblock %}
+
+{% block content %}
+<section class="py-4 py-md-5" style="background:#f5f7fb; min-height: calc(100vh - 72px);">
+  <div class="container" style="max-width:1100px;">
+
+    <!-- Hero -->
+    <div class="mb-4">
+      <div class="rounded-4 p-4 p-md-5 text-white"
+           style="background: linear-gradient(135deg, #243b6b 0%, #1f7a7a 100%);">
+        <p class="mb-2" style="opacity:.85; font-size:0.9rem;">Knowledge Hub</p>
+        <h1 class="mb-2 fw-bold" style="font-size:clamp(1.5rem, 2.5vw, 2.3rem);">Articles</h1>
+        <p class="mb-0" style="opacity:.9; max-width:700px;">
+          Read concise, exam-focused radiology articles designed for residents and everyday clinical practice.
+        </p>
+      </div>
+    </div>
+
+    <!-- Search / filters placeholder -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+      <div class="card-body p-3 p-md-4">
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <input type="text" class="form-control rounded-3" placeholder="Search articles (placeholder)">
+          </div>
+          <div class="col-6 col-md-3">
+            <select class="form-select rounded-3">
+              <option>All Topics</option>
+              <option>Chest</option>
+              <option>Neuro</option>
+              <option>Abdomen</option>
+            </select>
+          </div>
+          <div class="col-6 col-md-3">
+            <select class="form-select rounded-3">
+              <option>Latest</option>
+              <option>Most Read</option>
+              <option>Exam Prep</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Article cards -->
+    <div class="row g-3 g-md-4">
+      <div class="col-12 col-md-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+          <div class="card-body p-4">
+            <span class="badge rounded-pill text-bg-light border mb-3">Chest</span>
+            <h5 class="fw-bold mb-2">Approach to CXR: A Practical System</h5>
+            <p class="text-muted small mb-3">
+              A structured stepwise approach to chest X-ray interpretation for residents and on-call reporting.
+            </p>
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">8 min read • Placeholder</small>
+              <a href="#" class="btn btn-sm btn-outline-primary rounded-3">Read</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+          <div class="card-body p-4">
+            <span class="badge rounded-pill text-bg-light border mb-3">Neuro</span>
+            <h5 class="fw-bold mb-2">Rapid CT Brain Review in Emergency</h5>
+            <p class="text-muted small mb-3">
+              High-yield checklist for emergency CT brain reporting with common pitfalls and red flags.
+            </p>
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">6 min read • Placeholder</small>
+              <a href="#" class="btn btn-sm btn-outline-primary rounded-3">Read</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+          <div class="card-body p-4">
+            <span class="badge rounded-pill text-bg-light border mb-3">Abdomen</span>
+            <h5 class="fw-bold mb-2">USG Fatty Liver Grading Essentials</h5>
+            <p class="text-muted small mb-3">
+              Simple reporting language and pattern recognition tips for day-to-day abdominal ultrasound.
+            </p>
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">5 min read • Placeholder</small>
+              <a href="#" class="btn btn-sm btn-outline-primary rounded-3">Read</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+          <div class="card-body p-4">
+            <span class="badge rounded-pill text-bg-light border mb-3">Physics</span>
+            <h5 class="fw-bold mb-2">MRI T1 vs T2: Visual Understanding</h5>
+            <p class="text-muted small mb-3">
+              Build intuitive understanding of MRI contrast with exam-oriented practical examples.
+            </p>
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">10 min read • Placeholder</small>
+              <a href="#" class="btn btn-sm btn-outline-primary rounded-3">Read</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer note -->
+    <div class="mt-4">
+      <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+          <p class="mb-0 text-muted small">
+            Placeholder article list. Next step: connect this page to your database model and add article detail pages.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

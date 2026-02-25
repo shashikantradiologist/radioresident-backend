@@ -32,8 +32,8 @@
 
           {% if current_user.is_authenticated %}
             <!-- These routes will be added later; for now keep them as # to avoid breaking -->
-            <li class="nav-item"><a class="nav-link" href="#">Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Leaderboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('protected.dashboard') }}">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('protected.leaderboard') }}">Leaderboard</a></li>
           {% endif %}
         </ul>
 

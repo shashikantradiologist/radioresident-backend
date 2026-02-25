@@ -19,3 +19,8 @@ def courses():
 def notes():
     # Later: role-based gating (premium)
     return render_template("protected/notes.html")
+
+@protected_bp.get("/leaderboard")
+@login_required
+def leaderboard():
+    return render_template("protected/leaderboard.html")

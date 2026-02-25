@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from werkzeug.security import check_password_hash
 from flask_login import login_user
 from flask_dance.contrib.google import google
-
+from flask_login import login_user, logout_user, login_required
 from app.models.user import db, User
 
 auth_bp = Blueprint("auth", __name__)
@@ -31,7 +31,12 @@ def login():
     flash("Logged in!", "success")
     return redirect(url_for("public.home"))
 
-
+@auth_bp.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash("Logged out.", "success")
+    return redirect(url_for("public.home"))
 # -------------------------
 # Google OAuth Finalize Login (Flask-Dance)
 # -------------------------
@@ -50,7 +55,9 @@ def after_login():
     info = resp.json()
     email = (info.get("email") or "").strip().lower()
     full_name = (info.get("name") or "").strip() or email
-    google_id = info.get("id") or info.get("sub")  # depends on endpoint
+    google_id = info.get("id") or info.get("sub")
+    avatar_url = info.get("picture")
+    info = resp.json() # depends on endpoint
 
     if not email:
         flash("Google account missing email.", "error")
@@ -68,16 +75,23 @@ def after_login():
             user = User.query.filter_by(email=email).first()
 
         if not user:
-            # Create user (Google-only user typically has password_hash = NULL)
             user = User(full_name=full_name, email=email)
 
-            if hasattr(user, "google_sub") and google_id:
+        if google_id:
+            user.google_sub = google_id
+
+        if avatar_url:
+            user.avatar_url = avatar_url
+
+        db.session.add(user)
+
+        if hasattr(user, "google_sub") and google_id:
                 user.google_sub = google_id
 
-            if hasattr(user, "auth_provider"):
+        if hasattr(user, "auth_provider"):
                 user.auth_provider = "google"
 
-            db.session.add(user)
+                db.session.add(user)
         else:
             # Keep profile updated
             if hasattr(user, "full_name"):
@@ -88,8 +102,9 @@ def after_login():
 
             if hasattr(user, "auth_provider") and not getattr(user, "auth_provider", None):
                 user.auth_provider = "google"
-
-        db.session.commit()
+            if avatar_url:
+                user.avatar_url = avatar_url
+                db.session.commit()
 
     except Exception:
         db.session.rollback()

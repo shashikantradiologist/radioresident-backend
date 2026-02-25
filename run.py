@@ -1,5 +1,4 @@
 from app.models.user import db
-
 from dotenv import load_dotenv
 load_dotenv()
 print("Starting RadioResident...")

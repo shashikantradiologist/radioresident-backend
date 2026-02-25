@@ -1,402 +1,365 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Radioresident — Login</title>
+{% extends "layout.html" %}
+{% block title %}Radioresident — Login{% endblock %}
 
-  <style>
-    :root{
-      --bg: #0b1220;
-      --card: rgba(255, 255, 255, 0.08);
-      --card-border: rgba(255, 255, 255, 0.14);
-      --text: rgba(255,255,255,0.92);
-      --muted: rgba(255,255,255,0.68);
-      --danger: #ff6b6b;
-      --focus: rgba(255,255,255,0.25);
-      --input: rgba(255,255,255,0.10);
-      --input-border: rgba(255,255,255,0.18);
-      --shadow: 0 24px 70px rgba(0,0,0,0.45);
-      --radius: 18px;
-      --radius-sm: 12px;
-      --pad: 22px;
-      --maxw: 420px;
+{% block content %}
+<style>
+  :root {
+    --bg-1: #06122a;
+    --bg-2: #0d1f46;
+    --bg-3: #0d6b63;
+    --card: rgba(255, 255, 255, 0.08);
+    --card-2: rgba(255, 255, 255, 0.06);
+    --border: rgba(255, 255, 255, 0.14);
+    --text: #eef3ff;
+    --muted: rgba(238, 243, 255, 0.78);
+    --chip: rgba(255, 255, 255, 0.07);
+    --btn: rgba(255, 255, 255, 0.10);
+    --btn-hover: rgba(255, 255, 255, 0.16);
+    --shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
+    --radius-lg: 18px;
+    --radius-md: 12px;
+    --radius-pill: 999px;
+  }
+
+  .auth-page {
+    min-height: calc(100vh - 72px);
+    display: grid;
+    place-items: center;
+    padding: 32px 16px;
+    background:
+      radial-gradient(700px 300px at 15% 15%, rgba(73, 106, 255, 0.18), transparent 60%),
+      radial-gradient(650px 320px at 85% 25%, rgba(4, 210, 168, 0.16), transparent 60%),
+      radial-gradient(600px 260px at 50% 90%, rgba(112, 78, 255, 0.14), transparent 60%),
+      linear-gradient(120deg, var(--bg-1) 0%, #071738 40%, #06233d 70%, #07261f 100%);
+  }
+
+  .auth-shell {
+    width: 100%;
+    max-width: 1040px;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  .glass-card {
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.04));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+    color: var(--text);
+  }
+
+  .brand-panel {
+    min-height: 520px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .brand-panel::after {
+    content: "";
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    right: -70px;
+    bottom: -70px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(115, 88, 255, 0.25), transparent 70%);
+    pointer-events: none;
+  }
+
+  .brand-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .brand-badge {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 14px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.07));
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .brand-name {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.1;
+  }
+
+  .brand-sub {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.2;
+  }
+
+  .brand-title {
+    font-size: 34px;
+    line-height: 1.1;
+    font-weight: 700;
+    margin: 0 0 12px 0;
+    letter-spacing: -0.02em;
+  }
+
+  .brand-copy {
+    margin: 0;
+    max-width: 46ch;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--muted);
+  }
+
+  .chip-wrap {
+    margin-top: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .chip {
+    font-size: 12px;
+    color: var(--text);
+    border: 1px solid rgba(255,255,255,0.14);
+    background: var(--chip);
+    padding: 8px 12px;
+    border-radius: var(--radius-pill);
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .login-card {
+    min-height: 520px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+  }
+
+  .login-inner {
+    width: 100%;
+  }
+
+  .login-title {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+
+  .login-subtitle {
+    margin: 8px 0 20px 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  .google-btn {
+    width: 100%;
+    height: 48px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.16);
+    background: var(--btn);
+    color: var(--text);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.18s ease, transform 0.08s ease, border-color 0.18s ease;
+  }
+
+  .google-btn:hover {
+    background: var(--btn-hover);
+    border-color: rgba(255,255,255,0.22);
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .google-btn:active {
+    transform: translateY(1px);
+  }
+
+  .google-icon {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+  }
+
+  .helper-note {
+    margin-top: 12px;
+    font-size: 12px;
+    color: rgba(238, 243, 255, 0.68);
+  }
+
+  .tiny-footer {
+    margin-top: 18px;
+    font-size: 12px;
+    color: rgba(238, 243, 255, 0.58);
+    line-height: 1.5;
+  }
+
+  .auth-alert {
+    border-radius: 10px;
+    border: 1px solid rgba(255, 120, 120, 0.25);
+    background: rgba(255, 80, 80, 0.10);
+    color: #ffd5d5;
+    padding: 10px 12px;
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+
+  @media (max-width: 767px) {
+    .auth-page {
+      min-height: calc(100vh - 64px);
+      padding: 14px;
     }
 
-    *{ box-sizing: border-box; }
-    html, body { height: 100%; }
-    body{
-      margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
-      color: var(--text);
-      background: radial-gradient(1100px 700px at 20% 10%, #1b2a55 0%, rgba(27,42,85,0) 60%),
-                  radial-gradient(900px 600px at 80% 20%, #1a6a5a 0%, rgba(26,106,90,0) 58%),
-                  radial-gradient(900px 650px at 60% 90%, #3c2a7a 0%, rgba(60,42,122,0) 55%),
-                  var(--bg);
-      display: grid;
-      place-items: center;
-      padding: 28px 18px;
+    .auth-shell {
+      grid-template-columns: 1fr;
+      gap: 14px;
+      max-width: 560px;
     }
 
-    .wrap{
-      width: 100%;
-      max-width: 980px;
-      display: grid;
-      gap: 22px;
-      grid-template-columns: 1.15fr 0.85fr;
-      align-items: stretch;
+    .brand-panel {
+      min-height: 240px;
+      padding: 16px;
     }
 
-    .brand-panel{
-      border: 1px solid var(--card-border);
-      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.05));
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 28px;
-      overflow: hidden;
-      position: relative;
+    .brand-row {
+      margin-bottom: 14px;
     }
 
-    .brand-top{
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 18px;
+    .brand-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      font-size: 13px;
     }
 
-    .logo{
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.22);
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), rgba(255,255,255,0.10));
-      display: grid;
-      place-items: center;
-      letter-spacing: 0.4px;
-      font-weight: 700;
+    .brand-name {
+      font-size: 16px;
     }
 
-    .brand-title{
-      display: flex;
-      flex-direction: column;
-      line-height: 1.15;
-    }
-    .brand-title strong{ font-size: 16px; letter-spacing: 0.2px; }
-    .brand-title span{ font-size: 13px; color: var(--muted); }
-
-    .headline{
-      margin: 18px 0 12px;
-      font-size: 28px;
-      letter-spacing: -0.4px;
-    }
-    .subhead{
-      margin: 0;
-      color: var(--muted);
-      font-size: 14.5px;
-      line-height: 1.6;
-      max-width: 46ch;
+    .brand-sub {
+      font-size: 12px;
     }
 
-    .pill-row{
-      margin-top: 18px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .pill{
-      font-size: 12.5px;
-      color: rgba(255,255,255,0.78);
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.06);
-      padding: 8px 10px;
-      border-radius: 999px;
-      white-space: nowrap;
+    .brand-title {
+      font-size: 26px;
+      margin-bottom: 8px;
     }
 
-    .card{
-      border: 1px solid var(--card-border);
-      background: rgba(255,255,255,0.07);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 22px;
-    }
-
-    .card h2{
-      margin: 0 0 6px;
-      font-size: 18px;
-      letter-spacing: -0.2px;
-    }
-    .card p{
-      margin: 0 0 18px;
-      color: var(--muted);
-      font-size: 13.5px;
+    .brand-copy {
+      font-size: 14px;
       line-height: 1.55;
     }
 
-    .flash{
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.06);
-      border-radius: 14px;
-      padding: 10px 12px;
-      margin-bottom: 14px;
-      font-size: 13px;
-      color: rgba(255,255,255,0.80);
-    }
-    .flash.error{
-      border-color: rgba(255,107,107,0.35);
-      background: rgba(255,107,107,0.10);
-      color: rgba(255,255,255,0.92);
-    }
-    .flash.success{
-      border-color: rgba(110,231,183,0.35);
-      background: rgba(110,231,183,0.10);
-    }
-
-    form{ display: grid; gap: 12px; }
-
-    label{
-      font-size: 12.5px;
-      color: rgba(255,255,255,0.78);
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    .field{
-      display: grid;
-      gap: 6px;
-    }
-
-    .control{
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border: 1px solid var(--input-border);
-      background: var(--input);
-      border-radius: var(--radius-sm);
-      padding: 12px 12px;
-      transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
-    }
-    .control:focus-within{
-      border-color: rgba(255,255,255,0.28);
-      box-shadow: 0 0 0 4px rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.12);
-    }
-
-    .icon{
-      width: 18px;
-      height: 18px;
-      opacity: 0.75;
-      flex: 0 0 auto;
-    }
-
-    input{
-      width: 100%;
-      border: 0;
-      outline: none;
-      background: transparent;
-      color: var(--text);
-      font-size: 14px;
-    }
-    input::placeholder{ color: rgba(255,255,255,0.45); }
-
-    .row{
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 2px;
-    }
-
-    .checkbox{
-      display: inline-flex;
-      align-items: center;
+    .chip-wrap {
+      margin-top: 12px;
       gap: 8px;
+    }
+
+    .chip {
+      font-size: 11px;
+      padding: 7px 10px;
+    }
+
+    .login-card {
+      min-height: auto;
+      padding: 16px;
+    }
+
+    .login-title {
+      font-size: 22px;
+    }
+
+    .login-subtitle {
+      margin-top: 8px;
+      margin-bottom: 16px;
       font-size: 13px;
-      color: rgba(255,255,255,0.78);
-      user-select: none;
-    }
-    .checkbox input{
-      width: 16px;
-      height: 16px;
-      accent-color: rgba(255,255,255,0.85);
     }
 
-    a{
-      color: rgba(255,255,255,0.82);
-      text-decoration: none;
-      border-bottom: 1px solid rgba(255,255,255,0.26);
-      padding-bottom: 1px;
+    .google-btn {
+      height: 46px;
     }
-    a:hover{ border-bottom-color: rgba(255,255,255,0.55); }
+  }
+</style>
 
-    .btn{
-      margin-top: 6px;
-      width: 100%;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.14);
-      color: var(--text);
-      font-weight: 600;
-      font-size: 14px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      cursor: pointer;
-      transition: transform 120ms ease, background 160ms ease, border-color 160ms ease;
-    }
-    .btn:hover{
-      background: rgba(255,255,255,0.18);
-      border-color: rgba(255,255,255,0.24);
-    }
-    .btn:active{ transform: translateY(1px); }
-
-    .divider{
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      gap: 12px;
-      margin: 14px 0;
-      color: rgba(255,255,255,0.55);
-      font-size: 12.5px;
-    }
-    .divider:before, .divider:after{
-      content: "";
-      height: 1px;
-      background: rgba(255,255,255,0.14);
-    }
-
-    .oauth{
-      display: grid;
-      gap: 10px;
-    }
-    .btn-secondary{
-      width: 100%;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.08);
-      color: rgba(255,255,255,0.88);
-      font-weight: 600;
-      font-size: 13.5px;
-      padding: 11px 14px;
-      border-radius: 14px;
-      cursor: pointer;
-    }
-    .btn-secondary:hover{
-      background: rgba(255,255,255,0.12);
-    }
-
-    .footer{
-      margin-top: 14px;
-      font-size: 12.5px;
-      color: rgba(255,255,255,0.62);
-      line-height: 1.6;
-      text-align: center;
-    }
-
-    /* Responsive */
-    @media (max-width: 900px){
-      .wrap{ grid-template-columns: 1fr; max-width: var(--maxw); }
-      .brand-panel{ order: 2; }
-      .card{ order: 1; }
-      .headline{ font-size: 26px; }
-    }
-  </style>
-</head>
-
-<body>
-  <main class="wrap">
-
-    <!-- Brand / Info panel -->
-    <section class="brand-panel" aria-label="Radioresident information">
-      <div class="brand-top">
-        <div class="logo">RR</div>
-        <div class="brand-title">
-          <strong>Radioresident</strong>
-          <span>Clinical workflow and reporting</span>
+<div class="auth-page">
+  <div class="auth-shell">
+    <!-- Left Branding Panel -->
+    <section class="glass-card brand-panel">
+      <div class="brand-row">
+        <div class="brand-badge">RR</div>
+        <div>
+          <div class="brand-name">Radioresident</div>
+          <div class="brand-sub">Radiology learning platform</div>
         </div>
       </div>
 
-      <h1 class="headline">Sign in to continue</h1>
-      <p class="subhead">
-        Secure access for radiology residents and clinicians. Streamline cases, reporting,
-        and learning workflows in one place.
+      <h1 class="brand-title">Sign in to continue</h1>
+      <p class="brand-copy">
+        Secure access for radiology residents and clinicians. Learn with quizzes,
+        cases, and articles in one place.
       </p>
 
-      <div class="pill-row" aria-label="Highlights">
-        <div class="pill">Role-based access</div>
-        <div class="pill">Audit-ready activity logs</div>
-        <div class="pill">Fast case search</div>
-        <div class="pill">Resident learning tools</div>
+      <div class="chip-wrap">
+        <span class="chip">Case-based learning</span>
+        <span class="chip">Quiz practice</span>
+        <span class="chip">Radiology articles</span>
+        <span class="chip">Progress tracking</span>
       </div>
     </section>
 
-    <!-- Login card -->
-    <section class="card" aria-label="Login form">
-      <h2>Login</h2>
-      <p>Enter your credentials to access your dashboard.</p>
+    <!-- Right Login Card -->
+    <section class="glass-card login-card">
+      <div class="login-inner">
+        <h2 class="login-title">Login</h2>
+        <p class="login-subtitle">
+          Continue with your Google account to access Radioresident.
+        </p>
 
-      {# Flask flash messages #}
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          {% for category, message in messages %}
-            <div class="flash {{ category }}">{{ message }}</div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
+        {# Optional inline flash display just for auth page #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              {% if category in ["error", "danger"] %}
+                <div class="auth-alert">{{ message }}</div>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
 
-      <form method="post" action="{{ url_for('auth.login') }}" novalidate>
-        {# If you later add CSRF (Flask-WTF), include: {{ form.csrf_token }} #}
+        <a class="google-btn" href="{{ url_for('google.login') }}">
+          <svg class="google-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.2 1.2-.9 2.2-1.9 2.9l3.1 2.4c1.8-1.7 2.9-4.1 2.9-7 0-.7-.1-1.5-.2-2.2H12z"/>
+            <path fill="#34A853" d="M6.5 14.3l-.7.6-2.4 1.9C4.9 20 8.2 22 12 22c2.7 0 5- .9 6.7-2.6l-3.1-2.4c-.9.6-2 .9-3.6.9-2.8 0-5.1-1.9-5.9-4.4z"/>
+            <path fill="#4A90E2" d="M3.4 7.1C2.5 8.8 2 10.3 2 12s.5 3.2 1.4 4.9c0 0 3.1-2.4 3.1-2.5-.2-.6-.3-1.2-.3-1.9s.1-1.3.3-1.9L3.4 7.1z"/>
+            <path fill="#FBBC05" d="M12 4.8c1.9 0 3.5.6 4.8 1.8l2.6-2.6C17 1.8 14.7 1 12 1 8.2 1 4.9 3 3.4 7.1l3.1 2.5c.8-2.5 3.1-4.4 5.5-4.8z"/>
+          </svg>
+          Continue with Google
+        </a>
 
-        <div class="field">
-          <label for="email">Email</label>
-          <div class="control">
-            <!-- mail icon -->
-            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M4 6.5h16v11H4v-11Z" stroke="currentColor" stroke-width="1.6" opacity=".9"/>
-              <path d="m5 7.5 7 6 7-6" stroke="currentColor" stroke-width="1.6" opacity=".9"/>
-            </svg>
-            <input id="email" name="email" type="email" placeholder="name@hospital.com" autocomplete="username" required />
-          </div>
+        <div class="helper-note">
+          More sign-in options may be added later.
         </div>
 
-        <div class="field">
-          <label for="password">Password</label>
-          <div class="control">
-            <!-- lock icon -->
-            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M7 11V8.8C7 6.15 9.05 4 11.6 4h.8C14.95 4 17 6.15 17 8.8V11"
-                    stroke="currentColor" stroke-width="1.6" opacity=".9"/>
-              <path d="M6.5 11h11v9h-11v-9Z" stroke="currentColor" stroke-width="1.6" opacity=".9"/>
-              <path d="M12 14.2v2.6" stroke="currentColor" stroke-width="1.6" opacity=".9"/>
-            </svg>
-            <input id="password" name="password" type="password" placeholder="••••••••" autocomplete="current-password" required />
-          </div>
+        <div class="tiny-footer">
+          By continuing, you agree to use Radioresident for educational access.
         </div>
-
-        <div class="row">
-          <label class="checkbox">
-            <input type="checkbox" name="remember" />
-            <span>Remember me</span>
-          </label>
-
-          <a href="#" aria-label="Forgot password">Forgot password</a>
-        </div>
-
-        <button class="btn" type="submit">Sign in</button>
-
-        <div class="divider">or</div>
-
-
-        <div class="oauth">
-          <a class="btn-secondary" href="{{ url_for('google.login') }}" style="display:block;text-align:center;text-decoration:none;">
-            <svg style="vertical-align:middle;margin-right:8px;" width="20" height="20" viewBox="0 0 48 48"><g><path fill="#4285F4" d="M24 9.5c3.54 0 6.7 1.22 9.19 3.22l6.85-6.85C35.82 2.36 30.28 0 24 0 14.82 0 6.73 5.48 2.69 13.44l7.98 6.2C12.13 13.13 17.62 9.5 24 9.5z"/><path fill="#34A853" d="M46.1 24.55c0-1.64-.15-3.22-.42-4.74H24v9.01h12.42c-.54 2.9-2.18 5.36-4.65 7.01l7.19 5.6C43.98 37.13 46.1 31.3 46.1 24.55z"/><path fill="#FBBC05" d="M10.67 28.65c-1.13-3.36-1.13-6.99 0-10.35l-7.98-6.2C.9 16.36 0 20.06 0 24s.9 7.64 2.69 11.9l7.98-6.2z"/><path fill="#EA4335" d="M24 48c6.28 0 11.56-2.08 15.41-5.66l-7.19-5.6c-2.01 1.35-4.59 2.16-8.22 2.16-6.38 0-11.87-3.63-14.33-8.89l-7.98 6.2C6.73 42.52 14.82 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></g></svg>
-            Continue with Google
-          </a>
-          <button class="btn-secondary" type="button">Continue with Mobile OTP</button>
-        </div>
-
-        <div class="footer">
-          By continuing, you agree to the Radioresident access and usage policy.
-        </div>
-      </form>
+      </div>
     </section>
-  </main>
-</body>
-</html>
+  </div>
+</div>
+{% endblock %}

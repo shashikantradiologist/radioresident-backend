@@ -4,130 +4,212 @@
 
 {% block head_extra %}
 <style>
-  :root {
-    --primary: #2a3a6a;
-    --accent: #1a6a5a;
-    --bg: #f7f9fc;
-    --card: #fff;
-    --text: #1a2236;
-    --muted: #6b7a99;
-    --radius: 18px;
-    --shadow: 0 4px 32px rgba(42,58,106,0.10);
-    --maxw: 1100px;
-  }
-  body {
-    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-  }
-  .hero {
-    width: 100%;
-    background: linear-gradient(90deg, #2a3a6a 60%, #1a6a5a 100%);
-    color: #fff;
-    padding: 54px 0 38px 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: var(--shadow);
-  }
-  .hero-title {
-    font-size: 2.7rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    letter-spacing: -1px;
-    text-align: center;
-  }
-  .hero-desc {
-    font-size: 1.18rem;
-    color: #e0e6f7;
-    max-width: 560px;
-    text-align: center;
-    margin-bottom: 18px;
-  }
-  .main {
-    width: 100%;
-    max-width: var(--maxw);
-    margin: -38px auto 0 auto;
+  /* Home page specific tweaks only (do not override global tokens/body) */
+  .home-hero-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    padding: 0 18px 48px 18px;
+    gap: var(--rr-space-5);
+    align-items: start;
   }
-  .card {
-    background: var(--card);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 32px 28px 28px 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .card h2 {
-    margin: 0 0 8px 0;
-    font-size: 1.35rem;
-    color: var(--primary);
-  }
-  .card ul {
-    margin: 0;
-    padding-left: 18px;
-    color: var(--muted);
-    font-size: 1.05rem;
-  }
-  .card li { margin-bottom: 7px; }
 
-  @media (max-width: 900px) {
-    .main { grid-template-columns: 1fr; gap: 22px; margin-top: -18px; }
-    .hero-title { font-size: 2.1rem; }
+  .home-hero-kicker {
+    font-size: 0.85rem;
+    font-weight: 600;
+    opacity: 0.9;
+    margin-bottom: 8px;
+    letter-spacing: 0.2px;
   }
-  @media (max-width: 600px) {
-    .main { padding: 0 4vw 32px 4vw; }
-    .hero { padding: 36px 0 22px 0; }
-    .hero-title { font-size: 1.45rem; }
+
+  .home-hero-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: var(--rr-space-4);
+  }
+
+  .home-list-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    margin-top: 6px;
+    flex: 0 0 8px;
+    background: linear-gradient(135deg, var(--rr-primary-2), var(--rr-accent-2));
+  }
+
+  .home-list-content {
+    min-width: 0;
+  }
+
+  .home-list-title {
+    font-weight: 600;
+    color: var(--rr-text);
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .home-list-sub {
+    margin: 3px 0 0;
+    color: var(--rr-text-muted);
+    font-size: 0.85rem;
+  }
+
+  @media (min-width: 992px) {
+    .home-hero-grid {
+      grid-template-columns: 1.2fr 0.8fr;
+    }
   }
 </style>
 {% endblock %}
 
 {% block content %}
-<section class="hero">
-  <div class="hero-title">Radioresident</div>
+<div class="rr-page">
 
-  {% if current_user.is_authenticated %}
-    <div class="hero-desc">
-      Welcome back, <b>{{ (current_user.full_name or current_user.email).split(' ')[0] }}</b>.
-      Continue learning with quizzes, cases, and articles.
-    </div>
-  {% else %}
-    <div class="hero-desc">
-      Clinical workflow, reporting, and learning tools for radiology residents and clinicians.<br>
-      Streamline your cases, quizzes, and education in one modern platform.
-    </div>
-  {% endif %}
-</section>
+  <!-- Hero -->
+  <section class="rr-hero">
+    <div class="home-hero-grid">
+      <div>
+        <p class="home-hero-kicker">Radiology Learning Platform</p>
+        <h1 class="rr-title">Radioresident</h1>
 
-<main class="main">
-  <section class="card">
-    <h2>What’s new</h2>
-    <ul>
-      <li>Article: Approach to CXR</li>
-      <li>Case: Acute abdomen USG pearls</li>
-      <li>Quiz: Rapid CT brain</li>
-    </ul>
-    {% if not current_user.is_authenticated %}
-      <div class="mt-2">
-        <a class="btn btn-sm btn-primary" href="{{ url_for('auth.login') }}">Login to personalize</a>
+        {% if current_user.is_authenticated %}
+          <p class="rr-subtitle">
+            Welcome back, <strong>{{ (current_user.full_name or current_user.email).split(' ')[0] }}</strong>.
+            Continue learning with quizzes, cases, and articles.
+          </p>
+
+          <div class="rr-badge-row">
+            <span class="rr-pill">Cases</span>
+            <span class="rr-pill">Quizzes</span>
+            <span class="rr-pill">Articles</span>
+            <span class="rr-pill">Dashboard</span>
+          </div>
+
+          <div class="home-hero-actions">
+            <a class="rr-btn rr-btn-secondary" href="{{ url_for('protected.dashboard') }}">Open Dashboard</a>
+            <a class="rr-btn rr-btn-ghost" href="{{ url_for('public.quizzes') }}">Start Learning</a>
+          </div>
+        {% else %}
+          <p class="rr-subtitle">
+            Clinical workflow, reporting, and learning tools for radiology residents and clinicians.
+            Streamline your cases, quizzes, and education in one modern platform.
+          </p>
+
+          <div class="rr-badge-row">
+            <span class="rr-pill">Exam-focused</span>
+            <span class="rr-pill">Resident-friendly</span>
+            <span class="rr-pill">Case-based learning</span>
+          </div>
+
+          <div class="home-hero-actions">
+            <a class="rr-btn rr-btn-secondary" href="{{ url_for('auth.login') }}">Continue with Google</a>
+            <a class="rr-btn rr-btn-ghost" href="{{ url_for('public.articles') }}">Explore Articles</a>
+          </div>
+        {% endif %}
       </div>
-    {% endif %}
+
+      <div class="rr-card rr-card-soft">
+        <h2 class="rr-section-title">Quick snapshot</h2>
+        <div class="rr-grid rr-grid-2">
+          <div>
+            <p class="rr-stat-value">12</p>
+            <p class="rr-stat-label">Articles</p>
+          </div>
+          <div>
+            <p class="rr-stat-value">8</p>
+            <p class="rr-stat-label">Cases</p>
+          </div>
+          <div>
+            <p class="rr-stat-value">10</p>
+            <p class="rr-stat-label">Quiz Questions</p>
+          </div>
+          <div>
+            <p class="rr-stat-value">Live</p>
+            <p class="rr-stat-label">Platform Status</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <section class="card">
-    <h2>Platform highlights</h2>
-    <ul>
-      <li>Role-based access for residents and faculty</li>
-      <li>Audit-ready activity logs</li>
-      <li>Fast case search and reporting</li>
-      <li>Resident learning tools and quizzes</li>
-    </ul>
+  <!-- Main cards -->
+  <section class="rr-grid rr-grid-2">
+    <div class="rr-card rr-card-hover">
+      <div class="rr-flex-between rr-mb-4">
+        <h2 class="rr-section-title" style="margin:0;">What’s new</h2>
+        <a class="rr-btn rr-btn-ghost rr-small" href="{{ url_for('public.articles') }}">View all</a>
+      </div>
+
+      <ul class="rr-list">
+        <li class="rr-list-item">
+          <div class="rr-flex" style="align-items:flex-start;">
+            <span class="home-list-dot"></span>
+            <div class="home-list-content">
+              <p class="home-list-title">Approach to CXR</p>
+              <p class="home-list-sub">Article • Chest • Placeholder content</p>
+            </div>
+          </div>
+          <a class="rr-btn rr-btn-ghost rr-small" href="{{ url_for('public.articles') }}">Open</a>
+        </li>
+
+        <li class="rr-list-item">
+          <div class="rr-flex" style="align-items:flex-start;">
+            <span class="home-list-dot"></span>
+            <div class="home-list-content">
+              <p class="home-list-title">Acute abdomen USG pearls</p>
+              <p class="home-list-sub">Case • Abdomen • Placeholder content</p>
+            </div>
+          </div>
+          <a class="rr-btn rr-btn-ghost rr-small" href="{{ url_for('public.cases') }}">Open</a>
+        </li>
+
+        <li class="rr-list-item">
+          <div class="rr-flex" style="align-items:flex-start;">
+            <span class="home-list-dot"></span>
+            <div class="home-list-content">
+              <p class="home-list-title">Rapid CT brain</p>
+              <p class="home-list-sub">Quiz • Neuro • Placeholder content</p>
+            </div>
+          </div>
+          <a class="rr-btn rr-btn-ghost rr-small" href="{{ url_for('public.quizzes') }}">Open</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="rr-card rr-card-hover">
+      <h2 class="rr-section-title">Platform highlights</h2>
+      <ul class="rr-list">
+        <li class="rr-list-item">
+          <div>
+            <div class="home-list-title">Role-based access</div>
+            <div class="home-list-sub">Resident and faculty views can be separated later.</div>
+          </div>
+        </li>
+        <li class="rr-list-item">
+          <div>
+            <div class="home-list-title">Audit-ready activity logs</div>
+            <div class="home-list-sub">Good foundation for institutional and training workflows.</div>
+          </div>
+        </li>
+        <li class="rr-list-item">
+          <div>
+            <div class="home-list-title">Fast case search and reporting</div>
+            <div class="home-list-sub">Placeholder UX ready for future structured cases.</div>
+          </div>
+        </li>
+        <li class="rr-list-item">
+          <div>
+            <div class="home-list-title">Resident learning tools</div>
+            <div class="home-list-sub">Quizzes, articles, cases, and leaderboard experience.</div>
+          </div>
+        </li>
+      </ul>
+    </div>
   </section>
-</main>
+
+  <!-- Optional bottom placeholder -->
+  <section class="rr-card rr-empty rr-mb-6" style="margin-top: var(--rr-space-4);">
+    <strong>Next UI step:</strong> build the 10-mark basic quiz flow (Start Quiz → Question view → Results → Leaderboard),
+    then connect placeholders to real DB content.
+  </section>
+
+</div>
 {% endblock %}

@@ -3,13 +3,18 @@
 {% block title %}Dashboard | Radioresident{% endblock %}
 
 {% block content %}
+{% set last_score = last_score if last_score is not none else None %}
+{% set best_score = best_score if best_score is not none else None %}
+{% set attempts_total = attempts_total if attempts_total is not none else 0 %}
+{% set streak_days = streak_days if streak_days is not none else 0 %}
+{% set leaderboard_rank = leaderboard_rank if leaderboard_rank is not none else None %}
 <section class="py-4 py-md-5" style="background:#f5f7fb; min-height: calc(100vh - 72px);">
   <div class="container" style="max-width:1100px;">
 
     <!-- Page header (keep your existing header if you already have one) -->
     <div class="mb-4">
       <div class="rounded-4 p-4 p-md-5 text-white"
-           style="background: linear-gradient(135deg, #243b6b 0%, #1f7a7a 100%);">
+        style="background: linear-gradient(135deg, #243b6b 0%, #1f7a7a 100%);">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
           <div>
             <p class="mb-2" style="opacity:.85; font-size:0.9rem;">Your Learning Dashboard</p>
@@ -20,7 +25,7 @@
           </div>
           <div class="text-md-end">
             <a href="{{ url_for('protected.leaderboard') }}"
-               class="btn btn-light btn-sm px-3 py-2 rounded-3 fw-semibold">
+              class="btn btn-light btn-sm px-3 py-2 rounded-3 fw-semibold">
               View Leaderboard →
             </a>
           </div>
@@ -33,60 +38,28 @@
       <div class="row g-3 g-md-4">
 
         <!-- Quiz Score -->
-        <div class="col-12 col-sm-6 col-lg-3">
-          <div class="card h-100 border-0 shadow-sm rounded-4">
-            <div class="card-body p-3 p-md-4">
-              <div class="small text-muted mb-2">Quiz Score</div>
-
-              <div class="d-flex align-items-end gap-2">
-                <div class="fw-bold" style="font-size: 1.75rem;">
-                  {% if last_score is not none %}{{ last_score }}{% else %}--{% endif %}/10
-                </div>
-
-                {% if last_score is not none %}
-                  {% if last_score >= 9 %}
-                    <span class="badge text-bg-success">Excellent</span>
-                  {% elif last_score >= 7 %}
-                    <span class="badge text-bg-primary">Good</span>
-                  {% elif last_score >= 5 %}
-                    <span class="badge text-bg-warning">Needs work</span>
-                  {% else %}
-                    <span class="badge text-bg-danger">Low</span>
-                  {% endif %}
-                {% else %}
-                  <span class="badge text-bg-light border">No attempts</span>
-                {% endif %}
-              </div>
-
-              <p class="small text-muted mb-0 mt-2">
-                {% if last_score is not none %}
-                  Latest 10-mark quiz result.
-                {% else %}
-                  Attempt your first quiz to populate this card.
-                {% endif %}
-              </p>
-
-              <div class="small text-muted mt-2">
-                Best (all-time):
-                <span class="fw-semibold">
-                  {% if best_all_time is not none %}{{ best_all_time }}/10{% else %}--/10{% endif %}
-                </span>
-              </div>
-            </div>
-          </div>
+        <div class="fw-bold" style="font-size: 1.75rem;">
+          {% if last_score is not none %}
+          {{ last_score }}/10
+          {% else %}
+          --/10
+          {% endif %}
         </div>
+
+        <span class="badge text-bg-light border">
+          {% if last_score is not none %}Last attempt{% else %}No attempts{% endif %}
+        </span>
+
+        <p class="small text-muted mb-0 mt-2">
+          {% if best_score is not none %}
+          Best (all-time): {{ best_score }}/10 • Attempts: {{ attempts_total }}
+          {% else %}
+          Attempt your first quiz to populate this card.
+          {% endif %}
+        </p>
 
         <!-- Streak (still placeholder) -->
-        <div class="col-12 col-sm-6 col-lg-3">
-          <div class="card h-100 border-0 shadow-sm rounded-4">
-            <div class="card-body p-3 p-md-4">
-              <div class="small text-muted mb-2">Streak</div>
-              <div class="fw-bold" style="font-size: 1.75rem;">0</div>
-              <p class="small text-muted mb-0 mt-2">Daily quiz streak (days). (Coming soon)</p>
-            </div>
-          </div>
-        </div>
-
+        <div class="fw-bold" style="font-size: 1.75rem;">{{ streak_days }}</div>
         <!-- Cases Reviewed (still placeholder) -->
         <div class="col-12 col-sm-6 col-lg-3">
           <div class="card h-100 border-0 shadow-sm rounded-4">
@@ -99,27 +72,12 @@
         </div>
 
         <!-- Leaderboard Rank -->
-        <div class="col-12 col-sm-6 col-lg-3">
-          <div class="card h-100 border-0 shadow-sm rounded-4">
-            <div class="card-body p-3 p-md-4">
-              <div class="small text-muted mb-2">Leaderboard Rank</div>
-              <div class="fw-bold" style="font-size: 1.75rem;">
-                {% if rank_30d %}#{{ rank_30d }}{% else %}#--{% endif %}
-              </div>
-              <p class="small text-muted mb-0 mt-2">
-                {% if rank_30d %}
-                  Your rank (best score in last 30 days).
-                {% else %}
-                  Take a quiz to get ranked.
-                {% endif %}
-              </p>
-              <div class="small text-muted mt-2">
-                Attempts:
-                <span class="fw-semibold">{{ attempts_total or 0 }}</span>
-              </div>
-            </div>
-          </div>
+        <div class="fw-bold" style="font-size: 1.75rem;">
+          {% if leaderboard_rank %}#{{ leaderboard_rank }}{% else %}#--{% endif %}
         </div>
+        <p class="small text-muted mb-0 mt-2">
+          Attempts: {{ attempts_total }}
+        </p>
 
       </div>
     </section>
@@ -144,14 +102,15 @@
                   <div class="d-flex justify-content-between align-items-start gap-3">
                     <div>
                       {% if last_score is not none %}
-                        <div class="fw-semibold">Completed a 10-mark quiz</div>
-                        <div class="small text-muted">
-                          Last score: {{ last_score }}/10.
-                          Best (all-time): {% if best_all_time is not none %}{{ best_all_time }}/10{% else %}--/10{% endif %}.
-                        </div>
+                      <div class="fw-semibold">Completed a 10-mark quiz</div>
+                      <div class="small text-muted">
+                        Last score: {{ last_score }}/10.
+                        Best (all-time): {% if best_all_time is not none %}{{ best_all_time }}/10{% else %}--/10{% endif
+                        %}.
+                      </div>
                       {% else %}
-                        <div class="fw-semibold">Quiz not attempted yet</div>
-                        <div class="small text-muted">Start your first 10-mark quiz to populate this feed.</div>
+                      <div class="fw-semibold">Quiz not attempted yet</div>
+                      <div class="small text-muted">Start your first 10-mark quiz to populate this feed.</div>
                       {% endif %}
                     </div>
                     <span class="small text-muted">{% if last_score is not none %}Recent{% else %}—{% endif %}</span>
@@ -209,21 +168,26 @@
               <div class="small text-muted mb-2">Top ranks (last 30 days)</div>
 
               {% if top3 and top3|length > 0 %}
-                {% for r in top3 %}
-                  <div class="d-flex align-items-center justify-content-between py-2 {% if not loop.last %}border-bottom{% endif %}">
-                    <span>
-                      {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% else %}🥉{% endif %}
-                      {{ r.full_name or r.email }}
-                    </span>
-                    <span class="fw-semibold">{{ r.best_score }}/10</span>
-                  </div>
-                {% endfor %}
-
-                <a href="{{ url_for('protected.leaderboard') }}" class="btn btn-sm btn-link px-0 mt-2 text-decoration-none">
-                  Full leaderboard
-                </a>
+              {% for row in top3 %}
+              <div
+                class="d-flex align-items-center justify-content-between py-2 {% if not loop.last %}border-bottom{% endif %}">
+                <span>
+                  {% if row.rank == 1 %}🥇{% elif row.rank == 2 %}🥈{% else %}🥉{% endif %}
+                  {{ row.name }}
+                </span>
+                <span class="fw-semibold">{{ row.total_score }} pts</span>
+              </div>
+              {% endfor %}
               {% else %}
-                <div class="text-muted small">No rankings yet. Take a quiz to appear here.</div>
+              <div class="text-muted small">No leaderboard data yet (complete a quiz).</div>
+              {% endif %}
+
+              <a href="{{ url_for('protected.leaderboard') }}"
+                class="btn btn-sm btn-link px-0 mt-2 text-decoration-none">
+                Full leaderboard
+              </a>
+              {% else %}
+              <div class="text-muted small">No rankings yet. Take a quiz to appear here.</div>
               {% endif %}
 
             </div>
@@ -236,14 +200,15 @@
     <!-- Optional placeholder strip -->
     <section>
       <div class="card border-0 rounded-4" style="background: #f8fafc;">
-        <div class="card-body p-3 p-md-4 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+        <div
+          class="card-body p-3 p-md-4 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
           <div>
             <div class="fw-semibold">Next phase</div>
             <div class="small text-muted">
               {% if last_score is not none %}
-                Keep going — improve your best score and climb the leaderboard.
+              Keep going — improve your best score and climb the leaderboard.
               {% else %}
-                Wire 10-mark quiz engine → result page → leaderboard scoring.
+              Wire 10-mark quiz engine → result page → leaderboard scoring.
               {% endif %}
             </div>
           </div>

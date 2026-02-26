@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block title %}Quiz – Results{% endblock %}
+
+{% block body %}
+<div class="container py-4" style="max-width: 1000px;">
+  <div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-body p-4 p-md-5">
+      <h4 class="mb-2">Quiz Results</h4>
+      <div class="text-muted mb-3">You scored</div>
+      <div class="display-6 fw-bold">{{ attempt.score }} / {{ attempt.total }}</div>
+
+      <div class="mt-4 d-flex gap-2 flex-wrap">
+        <a class="btn btn-primary" href="{{ url_for('protected.dashboard') }}">Go to Dashboard</a>
+        <a class="btn btn-outline-dark" href="{{ url_for('protected.leaderboard') }}">View Leaderboard</a>
+        <form method="post" action="{{ url_for('quiz.start') }}">
+          <button class="btn btn-outline-primary" type="submit">Retake Quiz</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body p-4 p-md-5">
+      <h6 class="fw-semibold mb-3">Review (MVP)</h6>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Question</th>
+              <th>Your</th>
+              <th>Correct</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for a in answers %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td style="min-width: 420px;">{{ a.question.prompt }}</td>
+              <td><span class="badge text-bg-light border">{{ a.selected }}</span></td>
+              <td><span class="badge text-bg-light border">{{ a.question.correct }}</span></td>
+              <td>
+                {% if a.is_correct %}
+                  <span class="badge text-bg-success">Correct</span>
+                {% else %}
+                  <span class="badge text-bg-danger">Wrong</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% if a.question.explanation %}
+            <tr>
+              <td></td>
+              <td colspan="4" class="text-muted small">{{ a.question.explanation }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

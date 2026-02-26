@@ -1,207 +1,262 @@
 {% extends "layout.html" %}
+
 {% block title %}Dashboard | Radioresident{% endblock %}
 
 {% block content %}
-<div class="container py-4 py-md-5" style="max-width: 1100px;">
+<section class="py-4 py-md-5" style="background:#f5f7fb; min-height: calc(100vh - 72px);">
+  <div class="container" style="max-width:1100px;">
 
-  <!-- Hero -->
-  <section class="mb-4 mb-md-5">
-    <div class="rounded-4 p-4 p-md-5 text-white"
-         style="background: linear-gradient(135deg, #1f2a5a 0%, #0f766e 100%); box-shadow: 0 10px 30px rgba(0,0,0,0.12);">
-      <div class="row align-items-center g-4">
-        <div class="col-12 col-lg-8">
-          <div class="small text-uppercase mb-2" style="opacity: .85; letter-spacing: .08em;">
-            Resident Learning Dashboard
-          </div>
-          <h1 class="fw-bold mb-2 mb-md-3" style="line-height: 1.1;">
-            Welcome back{% if current_user.is_authenticated %}, {{ current_user.full_name or current_user.email.split('@')[0] }}{% endif %}
-          </h1>
-          <p class="mb-3 mb-md-4" style="opacity: .92; max-width: 640px;">
-            Practice one quick quiz daily and build your radiology recall. This is your home base for quizzes, cases,
-            notes, and learning progress.
-          </p>
-
-          <div class="d-flex flex-wrap gap-2 gap-md-3">
-            <!-- Safe links only -->
-            <a href="{{ url_for('public.quizzes') }}" class="btn btn-light fw-semibold px-3 px-md-4">
-              Start 10-Mark Quiz
-            </a>
-            <a href="{{ url_for('public.cases') }}" class="btn btn-outline-light px-3 px-md-4">
-              Browse Cases
-            </a>
-            <a href="{{ url_for('public.articles') }}" class="btn btn-outline-light px-3 px-md-4">
-              Read Articles
-            </a>
-          </div>
-        </div>
-
-        <div class="col-12 col-lg-4">
-          <div class="bg-white text-dark rounded-4 p-3 p-md-4" style="box-shadow: 0 8px 24px rgba(0,0,0,0.10);">
-            <div class="small text-muted mb-2">Today’s Focus</div>
-            <div class="fw-semibold mb-2">10 Marks Radiology Drill</div>
-            <p class="small text-muted mb-3">
-              Timed quiz + instant score + review placeholders. Use this daily to build consistency.
+    <!-- Page header (keep your existing header if you already have one) -->
+    <div class="mb-4">
+      <div class="rounded-4 p-4 p-md-5 text-white"
+           style="background: linear-gradient(135deg, #243b6b 0%, #1f7a7a 100%);">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+          <div>
+            <p class="mb-2" style="opacity:.85; font-size:0.9rem;">Your Learning Dashboard</p>
+            <h1 class="mb-2 fw-bold" style="font-size:clamp(1.5rem, 2.5vw, 2.3rem);">Dashboard</h1>
+            <p class="mb-0" style="opacity:.9; max-width:700px;">
+              Track your quiz performance, rank, and learning momentum.
             </p>
-            <div class="d-grid">
-              <a href="{{ url_for('public.quizzes') }}" class="btn btn-primary">
-                Go to Quizzes
-              </a>
-            </div>
+          </div>
+          <div class="text-md-end">
+            <a href="{{ url_for('protected.leaderboard') }}"
+               class="btn btn-light btn-sm px-3 py-2 rounded-3 fw-semibold">
+              View Leaderboard →
+            </a>
           </div>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- Stats Cards -->
-  <section class="mb-4 mb-md-5">
-    <div class="row g-3 g-md-4">
-      <div class="col-12 col-sm-6 col-lg-3">
-        <div class="card h-100 border-0 shadow-sm rounded-4">
-          <div class="card-body p-3 p-md-4">
-            <div class="small text-muted mb-2">Quiz Score</div>
-            <div class="d-flex align-items-end gap-2">
-              <div class="fw-bold" style="font-size: 1.75rem;">--/10</div>
-              <span class="badge text-bg-light border">Placeholder</span>
-            </div>
-            <p class="small text-muted mb-0 mt-2">Latest 10-mark quiz result will appear here.</p>
-          </div>
-        </div>
-      </div>
+    <!-- Stats Cards -->
+    <section class="mb-4 mb-md-5">
+      <div class="row g-3 g-md-4">
 
-      <div class="col-12 col-sm-6 col-lg-3">
-        <div class="card h-100 border-0 shadow-sm rounded-4">
-          <div class="card-body p-3 p-md-4">
-            <div class="small text-muted mb-2">Streak</div>
-            <div class="fw-bold" style="font-size: 1.75rem;">0</div>
-            <p class="small text-muted mb-0 mt-2">Daily quiz streak (days).</p>
-          </div>
-        </div>
-      </div>
+        <!-- Quiz Score -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="card h-100 border-0 shadow-sm rounded-4">
+            <div class="card-body p-3 p-md-4">
+              <div class="small text-muted mb-2">Quiz Score</div>
 
-      <div class="col-12 col-sm-6 col-lg-3">
-        <div class="card h-100 border-0 shadow-sm rounded-4">
-          <div class="card-body p-3 p-md-4">
-            <div class="small text-muted mb-2">Cases Reviewed</div>
-            <div class="fw-bold" style="font-size: 1.75rem;">0</div>
-            <p class="small text-muted mb-0 mt-2">Case review tracking placeholder.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12 col-sm-6 col-lg-3">
-        <div class="card h-100 border-0 shadow-sm rounded-4">
-          <div class="card-body p-3 p-md-4">
-            <div class="small text-muted mb-2">Leaderboard Rank</div>
-            <div class="fw-bold" style="font-size: 1.75rem;">#--</div>
-            <p class="small text-muted mb-0 mt-2">Rank appears after leaderboard is wired.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Main Grid: Recent Activity + Quick Actions -->
-  <section class="mb-4 mb-md-5">
-    <div class="row g-3 g-md-4">
-      <!-- Recent Activity -->
-      <div class="col-12 col-lg-8">
-        <div class="card border-0 shadow-sm rounded-4 h-100">
-          <div class="card-body p-3 p-md-4">
-            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
-              <h2 class="h5 mb-0 fw-semibold">Recent Activity</h2>
-              <span class="badge rounded-pill text-bg-light border">Placeholder Data</span>
-            </div>
-
-            <div class="list-group list-group-flush">
-              <div class="list-group-item px-0 py-3 border-bottom">
-                <div class="d-flex justify-content-between align-items-start gap-3">
-                  <div>
-                    <div class="fw-semibold">Quiz not attempted yet</div>
-                    <div class="small text-muted">Start your first 10-mark quiz to populate this feed.</div>
-                  </div>
-                  <span class="small text-muted">Now</span>
+              <div class="d-flex align-items-end gap-2">
+                <div class="fw-bold" style="font-size: 1.75rem;">
+                  {% if last_score is not none %}{{ last_score }}{% else %}--{% endif %}/10
                 </div>
+
+                {% if last_score is not none %}
+                  {% if last_score >= 9 %}
+                    <span class="badge text-bg-success">Excellent</span>
+                  {% elif last_score >= 7 %}
+                    <span class="badge text-bg-primary">Good</span>
+                  {% elif last_score >= 5 %}
+                    <span class="badge text-bg-warning">Needs work</span>
+                  {% else %}
+                    <span class="badge text-bg-danger">Low</span>
+                  {% endif %}
+                {% else %}
+                  <span class="badge text-bg-light border">No attempts</span>
+                {% endif %}
               </div>
 
-              <div class="list-group-item px-0 py-3 border-bottom">
-                <div class="d-flex justify-content-between align-items-start gap-3">
-                  <div>
-                    <div class="fw-semibold">Cases module</div>
-                    <div class="small text-muted">Your recently opened cases will appear here.</div>
-                  </div>
-                  <span class="small text-muted">--</span>
-                </div>
-              </div>
+              <p class="small text-muted mb-0 mt-2">
+                {% if last_score is not none %}
+                  Latest 10-mark quiz result.
+                {% else %}
+                  Attempt your first quiz to populate this card.
+                {% endif %}
+              </p>
 
-              <div class="list-group-item px-0 py-3">
-                <div class="d-flex justify-content-between align-items-start gap-3">
-                  <div>
-                    <div class="fw-semibold">Articles & notes</div>
-                    <div class="small text-muted">Learning history and bookmarks placeholder.</div>
-                  </div>
-                  <span class="small text-muted">--</span>
-                </div>
+              <div class="small text-muted mt-2">
+                Best (all-time):
+                <span class="fw-semibold">
+                  {% if best_all_time is not none %}{{ best_all_time }}/10{% else %}--/10{% endif %}
+                </span>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Quick Actions -->
-      <div class="col-12 col-lg-4">
-        <div class="card border-0 shadow-sm rounded-4 mb-3 mb-md-4">
-          <div class="card-body p-3 p-md-4">
-            <h2 class="h6 fw-semibold mb-3">Quick Actions</h2>
-            <div class="d-grid gap-2">
-              <a href="{{ url_for('public.quizzes') }}" class="btn btn-primary">Start Quiz</a>
-              <a href="{{ url_for('public.cases') }}" class="btn btn-outline-primary">Open Cases</a>
-              <a href="{{ url_for('public.articles') }}" class="btn btn-outline-primary">Read Articles</a>
-              <a href="{{ url_for('protected.notes') }}" class="btn btn-outline-secondary">My Notes (Placeholder)</a>
+        <!-- Streak (still placeholder) -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="card h-100 border-0 shadow-sm rounded-4">
+            <div class="card-body p-3 p-md-4">
+              <div class="small text-muted mb-2">Streak</div>
+              <div class="fw-bold" style="font-size: 1.75rem;">0</div>
+              <p class="small text-muted mb-0 mt-2">Daily quiz streak (days). (Coming soon)</p>
             </div>
           </div>
         </div>
 
-        <div class="card border-0 shadow-sm rounded-4">
-          <div class="card-body p-3 p-md-4">
-            <h2 class="h6 fw-semibold mb-3">Leaderboard Preview</h2>
-            <div class="small text-muted mb-2">Top ranks (placeholder)</div>
-
-            <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
-              <span>🥇 Rank 1</span>
-              <span class="fw-semibold">-- pts</span>
+        <!-- Cases Reviewed (still placeholder) -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="card h-100 border-0 shadow-sm rounded-4">
+            <div class="card-body p-3 p-md-4">
+              <div class="small text-muted mb-2">Cases Reviewed</div>
+              <div class="fw-bold" style="font-size: 1.75rem;">0</div>
+              <p class="small text-muted mb-0 mt-2">Case review tracking placeholder.</p>
             </div>
-            <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
-              <span>🥈 Rank 2</span>
-              <span class="fw-semibold">-- pts</span>
-            </div>
-            <div class="d-flex align-items-center justify-content-between py-2">
-              <span>🥉 Rank 3</span>
-              <span class="fw-semibold">-- pts</span>
-            </div>
-
-            <!-- Keep safe for now -->
-            <a href="#" class="btn btn-sm btn-link px-0 mt-2 text-decoration-none">Full leaderboard (coming soon)</a>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Optional placeholder strip -->
-  <section>
-    <div class="card border-0 rounded-4" style="background: #f8fafc;">
-      <div class="card-body p-3 p-md-4 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
-        <div>
-          <div class="fw-semibold">Next phase</div>
-          <div class="small text-muted">Wire 10-mark quiz engine → result page → leaderboard scoring.</div>
+        <!-- Leaderboard Rank -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="card h-100 border-0 shadow-sm rounded-4">
+            <div class="card-body p-3 p-md-4">
+              <div class="small text-muted mb-2">Leaderboard Rank</div>
+              <div class="fw-bold" style="font-size: 1.75rem;">
+                {% if rank_30d %}#{{ rank_30d }}{% else %}#--{% endif %}
+              </div>
+              <p class="small text-muted mb-0 mt-2">
+                {% if rank_30d %}
+                  Your rank (best score in last 30 days).
+                {% else %}
+                  Take a quiz to get ranked.
+                {% endif %}
+              </p>
+              <div class="small text-muted mt-2">
+                Attempts:
+                <span class="fw-semibold">{{ attempts_total or 0 }}</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <a href="{{ url_for('public.quizzes') }}" class="btn btn-outline-dark">
-          Continue to Quizzes
-        </a>
-      </div>
-    </div>
-  </section>
 
-</div>
+      </div>
+    </section>
+
+    <!-- Main Grid: Recent Activity + Quick Actions -->
+    <section class="mb-4 mb-md-5">
+      <div class="row g-3 g-md-4">
+
+        <!-- Recent Activity -->
+        <div class="col-12 col-lg-8">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body p-3 p-md-4">
+              <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                <h2 class="h5 mb-0 fw-semibold">Recent Activity</h2>
+                <span class="badge rounded-pill text-bg-light border">
+                  {% if last_score is not none %}Live{% else %}No activity{% endif %}
+                </span>
+              </div>
+
+              <div class="list-group list-group-flush">
+                <div class="list-group-item px-0 py-3 border-bottom">
+                  <div class="d-flex justify-content-between align-items-start gap-3">
+                    <div>
+                      {% if last_score is not none %}
+                        <div class="fw-semibold">Completed a 10-mark quiz</div>
+                        <div class="small text-muted">
+                          Last score: {{ last_score }}/10.
+                          Best (all-time): {% if best_all_time is not none %}{{ best_all_time }}/10{% else %}--/10{% endif %}.
+                        </div>
+                      {% else %}
+                        <div class="fw-semibold">Quiz not attempted yet</div>
+                        <div class="small text-muted">Start your first 10-mark quiz to populate this feed.</div>
+                      {% endif %}
+                    </div>
+                    <span class="small text-muted">{% if last_score is not none %}Recent{% else %}—{% endif %}</span>
+                  </div>
+                </div>
+
+                <div class="list-group-item px-0 py-3 border-bottom">
+                  <div class="d-flex justify-content-between align-items-start gap-3">
+                    <div>
+                      <div class="fw-semibold">Cases module</div>
+                      <div class="small text-muted">Your recently opened cases will appear here.</div>
+                    </div>
+                    <span class="small text-muted">--</span>
+                  </div>
+                </div>
+
+                <div class="list-group-item px-0 py-3">
+                  <div class="d-flex justify-content-between align-items-start gap-3">
+                    <div>
+                      <div class="fw-semibold">Articles & notes</div>
+                      <div class="small text-muted">Learning history and bookmarks placeholder.</div>
+                    </div>
+                    <span class="small text-muted">--</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="col-12 col-lg-4">
+
+          <div class="card border-0 shadow-sm rounded-4 mb-3 mb-md-4">
+            <div class="card-body p-3 p-md-4">
+              <h2 class="h6 fw-semibold mb-3">Quick Actions</h2>
+              <div class="d-grid gap-2">
+
+                <!-- Start Quiz must be POST -->
+                <form method="post" action="{{ url_for('quiz.start') }}">
+                  <button type="submit" class="btn btn-primary">Start Quiz</button>
+                </form>
+
+                <a href="{{ url_for('public.cases') }}" class="btn btn-outline-primary">Open Cases</a>
+                <a href="{{ url_for('public.articles') }}" class="btn btn-outline-primary">Read Articles</a>
+                <a href="{{ url_for('protected.notes') }}" class="btn btn-outline-secondary">My Notes (Placeholder)</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-3 p-md-4">
+              <h2 class="h6 fw-semibold mb-3">Leaderboard Preview</h2>
+              <div class="small text-muted mb-2">Top ranks (last 30 days)</div>
+
+              {% if top3 and top3|length > 0 %}
+                {% for r in top3 %}
+                  <div class="d-flex align-items-center justify-content-between py-2 {% if not loop.last %}border-bottom{% endif %}">
+                    <span>
+                      {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% else %}🥉{% endif %}
+                      {{ r.full_name or r.email }}
+                    </span>
+                    <span class="fw-semibold">{{ r.best_score }}/10</span>
+                  </div>
+                {% endfor %}
+
+                <a href="{{ url_for('protected.leaderboard') }}" class="btn btn-sm btn-link px-0 mt-2 text-decoration-none">
+                  Full leaderboard
+                </a>
+              {% else %}
+                <div class="text-muted small">No rankings yet. Take a quiz to appear here.</div>
+              {% endif %}
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Optional placeholder strip -->
+    <section>
+      <div class="card border-0 rounded-4" style="background: #f8fafc;">
+        <div class="card-body p-3 p-md-4 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+          <div>
+            <div class="fw-semibold">Next phase</div>
+            <div class="small text-muted">
+              {% if last_score is not none %}
+                Keep going — improve your best score and climb the leaderboard.
+              {% else %}
+                Wire 10-mark quiz engine → result page → leaderboard scoring.
+              {% endif %}
+            </div>
+          </div>
+
+          <form method="post" action="{{ url_for('quiz.start') }}">
+            <button type="submit" class="btn btn-outline-dark">
+              Take a 10-mark quiz
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</section>
 {% endblock %}

@@ -57,9 +57,11 @@ def create_app():
     from app.routes.auth import auth_bp
     from app.routes.public import public_bp
     from app.routes.protected import protected_bp
+    from app.routes.quiz import quiz_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(public_bp)
     app.register_blueprint(protected_bp)
+    app.register_blueprint(quiz_bp)
 
     return app

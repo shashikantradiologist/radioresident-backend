@@ -168,7 +168,6 @@
               <div class="small text-muted mb-2">Top ranks (last 30 days)</div>
 
               {% if leaderboard_preview and leaderboard_preview|length > 0 %}
-
               {% for row in leaderboard_preview %}
               <div
                 class="d-flex align-items-center justify-content-between py-2 {% if not loop.last %}border-bottom{% endif %}">
@@ -176,24 +175,14 @@
                 <span class="fw-semibold">{{ row.points }} pts</span>
               </div>
               {% endfor %}
+              {% else %}
+              <div class="text-muted small">No rankings yet. Take a quiz to appear here.</div>
+              {% endif %}
 
               <a href="{{ url_for('protected.leaderboard') }}"
                 class="btn btn-sm btn-link px-0 mt-2 text-decoration-none">
                 Full leaderboard →
               </a>
-
-              {% else %}
-              <div class="text-muted small">No rankings yet. Take a quiz to appear here.</div>
-              {% endif %}
-
-              <a href="{{ url_for('protected.leaderboard') }}"
-                class="btn btn-sm btn-link px-0 mt-2 text-decoration-none">
-                Full leaderboard
-              </a>
-              {% else %}
-              <div class="text-muted small">No rankings yet. Take a quiz to appear here.</div>
-              {% endif %}
-
             </div>
           </div>
 
